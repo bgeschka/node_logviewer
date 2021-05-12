@@ -42,28 +42,14 @@ function newLogEntry(msg) {
 	return {
 		logentry: logentry,
 		logentry_clearbutton: logentry_clearbutton,
-		logentry_log: logentry_log
+		logentry_log: logentry_log,
+		init : true
 	};
 
 }
 
-var autoscrollarea = 100;
-
 function scrollBottom(element) {
 	element.scrollTo(0, element.scrollHeight);
-}
-
-function handleScroll(element) {
-	// The scrollHeight property returns the entire height of an element in pixels, including padding, but not the border, scrollbar or margin.
-	// The scrollTop property sets or returns the number of pixels an element's content is scrolled vertically.
-	var totalHeight = element.scrollHeight;
-	var currentPosition = element.scrollTop;
-	var viewedHeight = parseInt(element.style.height.replace("px",""));
-
-	//only scroll down, if difference between scrollHeight and scrollTop is smaller then viewed height
-	var diff = totalHeight-currentPosition;
-	console.log(diff, viewedHeight, totalHeight);
-	if(!(diff > (viewedHeight+20))) scrollBottom(element);
 }
 
 socket.on('log message', function(msg) {
@@ -77,8 +63,17 @@ socket.on('log message', function(msg) {
 		logs[msg.file].logentry_log.innerHTML += msg.text;
 	}
 
-	handleScroll(logs[msg.file].logentry_log);
 	adjustHeight();
+
+	if(logs[msg.file].init){
+		//initially scroll down
+		scrollBottom(logs[msg.file].logentry_log);
+		logs[msg.file].init=false;
+	}
+
+
+	//scroll on every message
+	scrollBottom(logs[msg.file].logentry_log);
 	// window.scrollTo(0, document.body.scrollHeight);
 });
 
