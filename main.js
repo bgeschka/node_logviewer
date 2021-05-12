@@ -44,7 +44,7 @@ var tails = logfiles.map((file) => {
 io.on('connection', (socket) => {
 	tails.forEach(function(tail) {
   		tail.process.stdout.on("data", function (data) {
-  			io.emit('log message', {
+  			socket.emit('log message', {
 				file: tail.file,
 				text : data.toString()
 			});
