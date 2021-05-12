@@ -47,7 +47,7 @@ function newLogEntry(msg) {
 
 }
 
-var autoscrollarea = 30;
+var autoscrollarea = 100;
 
 function handleScroll(element_to_scroll) {
 	var containerheight = parseInt(element_to_scroll.style.height.replace("px", ""));
